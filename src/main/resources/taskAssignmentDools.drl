@@ -1,0 +1,37 @@
+package com.zhl.aps.optaplanner;
+
+import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScoreHolder;
+import com.zhl.aps.optaplanner.Task;
+import com.zhl.aps.optaplanner.Machine;
+import com.zhl.aps.optaplanner.TaskAssignment;
+
+global HardSoftScoreHolder scoreHolder;
+
+rule "yarnTypeMatch"
+when
+    Task(machine != null, machine.yarnType != requiredYarnType)
+then
+    scoreHolder.addHardConstraintMatch(kcontext, -10000);
+end
+
+rule "machineCapacity"
+when
+    $machine : Machine($capacity : capacity)
+    accumulate(
+        Task(
+            machine == $machine,
+            $amount : amount);
+        $amountTotal : sum($amount);
+        $amountTotal > $capacity
+        )
+then
+    scoreHolder.addHardConstraintMatch(kcontext, $capacity - $amountTotal);
+end
+
+rule "machineCost_used"
+when
+    $machine : Machine($cost : cost)
+    exists Task(machine == $machine)
+then
+    scoreHolder.addSoftConstraintMatch(kcontext, -$cost);
+end

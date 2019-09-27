@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<solver>
+
+    <!-- Domain model configuration -->
+    <solutionClass>com.zhl.aps.optaplanner.TaskAssignment</solutionClass>
+    <entityClass>com.zhl.aps.optaplanner.Task</entityClass>
+
+
+    <!-- Score configuration -->
+    <scoreDirectorFactory>
+        <scoreDrl>taskAssignmentDools.drl</scoreDrl>
+    </scoreDirectorFactory>
+
+    <!-- Optimization algorithms configuration -->
+    <termination>
+        <secondsSpentLimit>10</secondsSpentLimit>
+    </termination>
+
+</solver>
